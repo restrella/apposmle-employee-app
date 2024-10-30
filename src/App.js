@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { EMPLOYEES_DATA } from "./data/employees";
+import EmployeesTable from "./components/EmployeesTable";
+import { Container, CssBaseline } from "@mui/material";
+import EmployeeForm from "./components/EmployeeForm";
+import EmployeesPage from "./pages/EmployeesPage";
+import { Navigate, Route, Router, Routes } from "react-router-dom";
 
-function App() {
+const App = () => {
+  const [employees, setEmployees] = useState(EMPLOYEES_DATA);
+  const [edit, setEdit] = useState(false);
+
+  const handleDeleteEmployee = (id) => {
+    setEmployees((prevState) =>
+      prevState.filter((employee) => employee.id !== id)
+    );
+  };
+
+  const handleEdit = (id) => {
+    setEdit(true);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <CssBaseline />
+      <Container>
+        <Routes>
+          <Route path="/" element={<Navigate to="/employees" />}></Route>
+          <Route
+            path="/employees"
+            element={
+              <EmployeesPage
+                employees={employees}
+                onDeleteEmployee={handleDeleteEmployee}
+                onEdit={handleEdit}
+              />
+            }></Route>
+        </Routes>
+      </Container>
+    </>
   );
-}
+};
 
 export default App;
