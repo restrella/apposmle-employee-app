@@ -5,10 +5,13 @@ import { Container, CssBaseline } from "@mui/material";
 import EmployeeForm from "./components/EmployeeForm";
 import EmployeesPage from "./pages/EmployeesPage";
 import { Navigate, Route, Router, Routes } from "react-router-dom";
+import NotFoundPage from "./pages/NotFoundPage";
+import AddEmployeePage from "./pages/AddEmployeePage";
+import EmployeeDetailsPage from "./pages/EmployeeDetailsPage";
+import EditEmployeePage from "./pages/EditEmployeePage";
 
 const App = () => {
   const [employees, setEmployees] = useState(EMPLOYEES_DATA);
-  const [edit, setEdit] = useState(false);
 
   const handleDeleteEmployee = (id) => {
     setEmployees((prevState) =>
@@ -16,9 +19,28 @@ const App = () => {
     );
   };
 
-  const handleEdit = (id) => {
-    setEdit(true);
+  const handleSubmit = (employee) => {
+    setEmployees((prevState) => [
+      ...prevState,
+      { ...employee, id: prevState.length * 999 + 1 },
+    ]);
   };
+
+  const handleEditEmployee = (id, employee) => {
+    console.log("id", id);
+    console.log("employee", employee);
+    setEmployees((prevState) =>
+      prevState.map((oldEmployee) => {
+        if (oldEmployee.id == id) {
+          return {
+            ...employee,
+          };
+        }
+        return oldEmployee;
+      })
+    );
+  };
+
   return (
     <>
       <CssBaseline />
@@ -31,9 +53,33 @@ const App = () => {
               <EmployeesPage
                 employees={employees}
                 onDeleteEmployee={handleDeleteEmployee}
-                onEdit={handleEdit}
               />
             }></Route>
+
+          <Route
+            path="/employees/:id"
+            element={
+              <EmployeeDetailsPage
+                employees={employees}
+                onDeleteEmployee={handleDeleteEmployee}
+              />
+            }
+          />
+          <Route
+            path="/employees/new"
+            element={<AddEmployeePage onSubmit={handleSubmit} />}
+          />
+          <Route
+            path="/employees/:id/edit"
+            element={
+              <EditEmployeePage
+                employees={employees}
+                onEditEmployee={handleEditEmployee}
+              />
+            }></Route>
+
+          <Route path="/not-found" element={<NotFoundPage />} />
+          <Route path="*" element={<Navigate to="/not-found" />} />
         </Routes>
       </Container>
     </>

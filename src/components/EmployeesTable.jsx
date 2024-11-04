@@ -1,4 +1,4 @@
-import { ArrowForward, Delete } from "@mui/icons-material";
+import { ArrowForward, Delete, Edit } from "@mui/icons-material";
 import {
   Icon,
   IconButton,
@@ -11,8 +11,10 @@ import {
   TableRow,
 } from "@mui/material";
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const EmployeesTable = ({ employees, onDeleteEmployee, onEdit }) => {
+const EmployeesTable = ({ employees, onDeleteEmployee }) => {
+  const navigate = useNavigate();
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -24,22 +26,29 @@ const EmployeesTable = ({ employees, onDeleteEmployee, onEdit }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {employees.map((row) => (
+          {employees.map((employee) => (
             <TableRow
-              key={row.id}
+              key={employee.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
               <TableCell component="th" scope="row">
-                {row.name}
+                {employee.name}
               </TableCell>
-              <TableCell>{row.username}</TableCell>
+              <TableCell>{employee.username}</TableCell>
               <TableCell>
                 <IconButton
-                  color="error"
-                  onClick={() => onDeleteEmployee(row.id)}>
-                  <Delete />
-                </IconButton>
-                <IconButton color="primary" onClick={() => onEdit(row.id)}>
+                  color="primary"
+                  onClick={() => navigate(`/employees/${employee.id}`)}>
                   <ArrowForward />
+                </IconButton>
+                <Link to={`${employee.id}/edit`}>
+                  <IconButton color={"primary"}>
+                    <Edit />
+                  </IconButton>
+                </Link>
+                <IconButton
+                  color="error"
+                  onClick={() => onDeleteEmployee(employee.id)}>
+                  <Delete />
                 </IconButton>
               </TableCell>
             </TableRow>
