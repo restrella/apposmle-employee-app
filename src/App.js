@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EMPLOYEES_DATA } from "./data/employees";
 import EmployeesTable from "./components/EmployeesTable";
 import { Container, CssBaseline } from "@mui/material";
@@ -9,37 +9,45 @@ import NotFoundPage from "./pages/NotFoundPage";
 import AddEmployeePage from "./pages/AddEmployeePage";
 import EmployeeDetailsPage from "./pages/EmployeeDetailsPage";
 import EditEmployeePage from "./pages/EditEmployeePage";
+import axios from "axios";
+import { fetchEmployees } from "./services/employee";
 
 const App = () => {
-  const [employees, setEmployees] = useState(EMPLOYEES_DATA);
+  // const handleDeleteEmployee = (id) => {
+  //   setEmployees((prevState) =>
+  //     prevState.filter((employee) => employee.id !== id)
+  //   );
+  // };
 
-  const handleDeleteEmployee = (id) => {
-    setEmployees((prevState) =>
-      prevState.filter((employee) => employee.id !== id)
-    );
-  };
+  // const handleSubmit = (employee) => {
+  //   setEmployees((prevState) => [
+  //     ...prevState,
+  //     { ...employee, id: prevState.length * 999 + 1 },
+  //   ]);
+  // };
 
-  const handleSubmit = (employee) => {
-    setEmployees((prevState) => [
-      ...prevState,
-      { ...employee, id: prevState.length * 999 + 1 },
-    ]);
-  };
+  // const handleFilterEmployees = (searchKey) => {
+  //   setEmployees((prevState) =>
+  //     prevState.filter((employee) =>
+  //       employee.name.toLowerCase().includes(searchKey.toLowerCase())
+  //     )
+  //   );
+  // };
 
-  const handleEditEmployee = (id, employee) => {
-    console.log("id", id);
-    console.log("employee", employee);
-    setEmployees((prevState) =>
-      prevState.map((oldEmployee) => {
-        if (oldEmployee.id == id) {
-          return {
-            ...employee,
-          };
-        }
-        return oldEmployee;
-      })
-    );
-  };
+  // const handleEditEmployee = (id, employee) => {
+  //   console.log("id", id);
+  //   console.log("employee", employee);
+  //   setEmployees((prevState) =>
+  //     prevState.map((oldEmployee) => {
+  //       if (oldEmployee.id == id) {
+  //         return {
+  //           ...employee,
+  //         };
+  //       }
+  //       return oldEmployee;
+  //     })
+  //   );
+  // };
 
   return (
     <>
@@ -51,8 +59,9 @@ const App = () => {
             path="/employees"
             element={
               <EmployeesPage
-                employees={employees}
-                onDeleteEmployee={handleDeleteEmployee}
+              // employees={employees}
+              // onDeleteEmployee={handleDeleteEmployee}
+              // onFilterEmployees={handleFilterEmployees}
               />
             }></Route>
 
@@ -60,21 +69,25 @@ const App = () => {
             path="/employees/:id"
             element={
               <EmployeeDetailsPage
-                employees={employees}
-                onDeleteEmployee={handleDeleteEmployee}
+              // employees={employees}
+              // onDeleteEmployee={handleDeleteEmployee}
               />
             }
           />
           <Route
             path="/employees/new"
-            element={<AddEmployeePage onSubmit={handleSubmit} />}
+            element={
+              <AddEmployeePage
+              // onSubmit={handleSubmit}
+              />
+            }
           />
           <Route
             path="/employees/:id/edit"
             element={
               <EditEmployeePage
-                employees={employees}
-                onEditEmployee={handleEditEmployee}
+              // employees={employees}
+              // onEditEmployee={handleEditEmployee}
               />
             }></Route>
 

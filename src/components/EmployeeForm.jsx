@@ -42,7 +42,7 @@ const EmployeeForm = ({ onSubmit, initialValue }) => {
     console.log("form", form);
     onSubmit(form);
     // console.log(event);
-    navigate("/");
+    // navigate("/");
   };
 
   const handleChange = ({ currentTarget: input }) => {
@@ -71,7 +71,9 @@ const EmployeeForm = ({ onSubmit, initialValue }) => {
   };
 
   const isFormInvalid = () => {
+    console.log("form", form);
     const result = schema.validate(form);
+    console.log("result", result);
 
     return !!result.error;
   };

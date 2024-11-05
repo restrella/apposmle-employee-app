@@ -1,10 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EmployeesTable from "../components/EmployeesTable";
 import { Button, Grid2 as Grid } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import * as employeeService from "../services/employee";
 
-const EmployeesPage = ({ employees, onDeleteEmployee, onEdit }) => {
+const EmployeesPage = ({
+  // employees,
+  onDeleteEmployee,
+  // onFilterEmployees,
+  onEdit,
+}) => {
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    employeeService
+      .fetchEmployees()
+      .then((response) => {
+        setEmployees(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  }, []);
+
+  // const [searchParams] = useSearchParams();
+
+  // const searchKey = searchParams.get("searchKey");
+
+  // useEffect(() => {
+  //   console.log("searchKey", searchKey);
+  //   onFilterEmployees(searchKey);
+  // }, []);
+
   return (
     <Grid
       container
