@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import EmployeesTable from "../components/EmployeesTable";
 import { Button, Grid2 as Grid } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import * as employeeService from "../services/employee";
 
 const EmployeesPage = ({
   // employees,
-  onDeleteEmployee,
   // onFilterEmployees,
   onEdit,
 }) => {
@@ -24,6 +23,7 @@ const EmployeesPage = ({
       });
   }, []);
 
+  const navigate = useNavigate();
   // const [searchParams] = useSearchParams();
 
   // const searchKey = searchParams.get("searchKey");
@@ -32,6 +32,23 @@ const EmployeesPage = ({
   //   console.log("searchKey", searchKey);
   //   onFilterEmployees(searchKey);
   // }, []);
+
+  const handleDeleteEmployee = async (id) => {
+    const employeesClone = [...employees];
+
+    try {
+      setEmployees((prevState) =>
+        prevState.filter((employee) => employee.id !== id)
+      );
+      await employeeService.deleteEmployee(id);
+    } catch (error) {
+      setEmployees(employeesClone);
+      console.log(error);
+      if (error.response && error.response.status === 404) {
+        alert("Data might have already been deleted");
+      }
+    }
+  };
 
   return (
     <Grid
@@ -53,7 +70,7 @@ const EmployeesPage = ({
       <Grid size={12}>
         <EmployeesTable
           employees={employees}
-          onDeleteEmployee={onDeleteEmployee}
+          onDeleteEmployee={handleDeleteEmployee}
         />
       </Grid>
     </Grid>

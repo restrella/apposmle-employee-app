@@ -4,15 +4,42 @@ import EmployeesTable from "./components/EmployeesTable";
 import { Container, CssBaseline } from "@mui/material";
 import EmployeeForm from "./components/EmployeeForm";
 import EmployeesPage from "./pages/EmployeesPage";
-import { Navigate, Route, Router, Routes } from "react-router-dom";
+import { Navigate, Route, Router, Routes, useNavigate } from "react-router-dom";
 import NotFoundPage from "./pages/NotFoundPage";
 import AddEmployeePage from "./pages/AddEmployeePage";
 import EmployeeDetailsPage from "./pages/EmployeeDetailsPage";
 import EditEmployeePage from "./pages/EditEmployeePage";
 import axios from "axios";
 import { fetchEmployees } from "./services/employee";
+import RegisterPage from "./pages/RegisterPage";
+import NavBar from "./components/NavBar";
+import LoginPage from "./pages/LoginPage";
+import * as authService from "./services/auth";
 
 const App = () => {
+  const navigate = useNavigate();
+  const [accessToken, setAccessToken] = useState(authService.getAccessToken());
+
+  const handleLogin = async (username, password) => {
+    try {
+      console.log("handleLogin");
+      const response = await authService.login(username, password);
+      console.log("response", response);
+      localStorage.setItem("accessToken", response.data.accessToken);
+      setAccessToken(response.data.accessToken);
+      navigate("/");
+    } catch (error) {
+      // if(error.response )
+      // alert
+      console.log("error", error);
+    }
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    setAccessToken(null);
+    navigate("/login");
+  };
   // const handleDeleteEmployee = (id) => {
   //   setEmployees((prevState) =>
   //     prevState.filter((employee) => employee.id !== id)
@@ -52,17 +79,22 @@ const App = () => {
   return (
     <>
       <CssBaseline />
-      <Container>
+      <NavBar onLogout={handleLogout} />
+      <Container sx={{ marginTop: 3 }}>
         <Routes>
           <Route path="/" element={<Navigate to="/employees" />}></Route>
           <Route
             path="/employees"
             element={
-              <EmployeesPage
-              // employees={employees}
-              // onDeleteEmployee={handleDeleteEmployee}
-              // onFilterEmployees={handleFilterEmployees}
-              />
+              accessToken ? (
+                <EmployeesPage
+                // employees={employees}
+                // onDeleteEmployee={handleDeleteEmployee}
+                // onFilterEmployees={handleFilterEmployees}
+                />
+              ) : (
+                <Navigate to="/login" />
+              )
             }></Route>
 
           <Route
@@ -89,7 +121,11 @@ const App = () => {
               // employees={employees}
               // onEditEmployee={handleEditEmployee}
               />
-            }></Route>
+            }
+          />
+
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
 
           <Route path="/not-found" element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to="/not-found" />} />

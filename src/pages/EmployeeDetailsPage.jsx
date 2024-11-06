@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchEmployeesById } from "../services/employee";
+import * as employeeService from "../services/employee";
 
 const EmployeeDetailsPage = ({ onDeleteEmployee }) => {
   const params = useParams();
@@ -26,11 +26,16 @@ const EmployeeDetailsPage = ({ onDeleteEmployee }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchEmployeesById(empId).then((response) => {
+    employeeService.fetchEmployeeById(empId).then((response) => {
       // console.log("response.data", response.data);
       setEmployee(response.data);
     });
   }, []);
+
+  const handleDeleteEmployee = (id) => {
+    employeeService.deleteEmployee(id);
+    navigate("/");
+  };
 
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -69,8 +74,7 @@ const EmployeeDetailsPage = ({ onDeleteEmployee }) => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                onDeleteEmployee(empId);
-                navigate("/");
+                handleDeleteEmployee(empId);
               }}>
               Delete
             </MenuItem>

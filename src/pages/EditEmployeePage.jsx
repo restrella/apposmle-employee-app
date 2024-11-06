@@ -11,7 +11,7 @@ const EditEmployeePage = ({ onEditEmployee }) => {
 
   useEffect(() => {
     setLoading(true);
-    employeeService.fetchEmployeesById(params.id).then((response) => {
+    employeeService.fetchEmployeeById(params.id).then((response) => {
       // console.log("response.data", response.data);
       setEmployee(response.data);
       setLoading(false);

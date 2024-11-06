@@ -1,11 +1,19 @@
-import axios from "axios";
 import http from "./http";
 
 export function fetchEmployees() {
-  return http.get("/employees");
+  //   const accessToken = localStorage.getItem("accessToken");
+  //   console.log("accessToken", accessToken);
+  return http.get(
+    "/employees"
+    //     , {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   }
+  );
 }
 
-export function fetchEmployeesById(id) {
+export function fetchEmployeeById(id) {
   return http.get(`/employees/${id}`);
 }
 
@@ -35,4 +43,8 @@ export function updateEmployee(id, employee) {
     }
   });
   return http.put(`/employees/${id}`, employeeClone);
+}
+
+export function deleteEmployee(id) {
+  return http.delete(`/employees/${id}`);
 }

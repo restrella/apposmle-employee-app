@@ -9,6 +9,10 @@ const AddEmployeePage = () => {
     employeeService.addEmployee(form).then((response) => {
       console.log(response);
       navigate("/");
+    }).catch(error => {
+      if(error.response && error.response.status >= 400 && error.response.status < 500 ) {
+        alert(error.response.data.message[0])
+      }
     });
   };
   return <EmployeeForm onSubmit={handleSubmit} />;
